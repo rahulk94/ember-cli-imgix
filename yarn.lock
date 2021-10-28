@@ -1533,11 +1533,6 @@ babel-plugin-htmlbars-inline-precompile@^0.2.5:
   resolved "https://registry.yarnpkg.com/babel-plugin-htmlbars-inline-precompile/-/babel-plugin-htmlbars-inline-precompile-0.2.6.tgz#c00b8a3f4b32ca04bf0f0d5169fcef3b5a66d69d"
   integrity sha512-H4H75TKGUFij8ukwEYWEERAgrUf16R8NSK1uDPe3QwxT8mnE1K8+/s6DVjUqbM5Pv6lSIcE4XufXdlSX+DTB6g==
 
-babel-plugin-inline-package-json@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-inline-package-json/-/babel-plugin-inline-package-json-2.0.0.tgz#1f9558d96667f4b8787e807d764e6e15b4f0cd07"
-  integrity sha1-H5VY2WZn9Lh4foB9dk5uFbTwzQc=
-
 babel-plugin-module-resolver@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-module-resolver/-/babel-plugin-module-resolver-3.2.0.tgz#ddfa5e301e3b9aa12d852a9979f18b37881ff5a7"

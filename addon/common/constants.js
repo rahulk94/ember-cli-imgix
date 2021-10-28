@@ -1,6 +1,7 @@
 /* global require */
-const APP_VERSION = require('../../package.json').version;
+const packageJson = JSON.parse(require('../../package.json'));
+const APP_VERSION = packageJson.version;
 
 export default {
-  APP_VERSION
+  APP_VERSION,
 };
