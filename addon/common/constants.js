@@ -1,6 +1,6 @@
 /* global require */
-const packageJson = JSON.parse(require('../../package.json'));
-const APP_VERSION = packageJson.version;
+// Hard code to workaround Embroider compat issues
+const APP_VERSION = '2.1.2';
 
 export default {
   APP_VERSION,
