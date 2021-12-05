@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import { computed, get } from '@ember/object';
 import { tryInvoke } from '@ember/utils';
-import config from 'ember-get-config';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
 import URI from 'jsuri';
@@ -23,7 +22,8 @@ const attributeMap = {
   src: 'src',
   srcset: 'srcset',
   sizes: 'sizes',
-  ...(get(config, 'APP.imgix.attributeNameMap') || {}),
+  // Hack disable this as reconz doesn't use it
+  // ...(get(config, 'APP.imgix.attributeNameMap') || {}),
 };
 
 const buildDebugParams = ({ width, height }) => {
@@ -72,6 +72,16 @@ export default Component.extend({
 
   debounceRate: 400,
 
+  config: null,
+
+  init() {
+    this._super(...arguments);
+
+    // Config doesn't change at runtime so we set this once and be done with it
+    this.config =
+      Ember.getOwner(this).resolveRegistration('config:environment');
+  },
+
   didInsertElement(...args) {
     this._super(...args);
 
@@ -107,18 +117,18 @@ export default Component.extend({
   }),
 
   _client: computed('disableLibraryParam', function () {
-    if (!config || !get(config, 'APP.imgix.source')) {
+    if (!this.config || !get(this.config, 'APP.imgix.source')) {
       throw new EmberError(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
       );
     }
 
     const disableLibraryParam =
-      get(config, 'APP.imgix.disableLibraryParam') ||
+      get(this.config, 'APP.imgix.disableLibraryParam') ||
       get(this, 'disableLibraryParam');
 
     return new ImgixClient({
-      domain: config.APP.imgix.source,
+      domain: this.config.APP.imgix.source,
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
@@ -157,7 +167,7 @@ export default Component.extend({
 
       const isFixedDimensionsMode = widthProp != null || heightProp != null;
 
-      const shouldShowDebugParams = get(config, 'APP.imgix.debug');
+      const shouldShowDebugParams = get(this.config, 'APP.imgix.debug');
 
       const imgixOptions = get(this, 'options');
 
@@ -180,7 +190,7 @@ export default Component.extend({
       // Build base options
       const options = {
         // default params from application config
-        ...(config.APP.imgix.defaultParams || {}),
+        ...(this.config.APP.imgix.defaultParams || {}),
         // Add fit from 'fit' prop
         fit: get(this, 'fit'),
         // Add width from computed width, or width prop
@@ -262,8 +272,8 @@ export default Component.extend({
     return placeholderURL;
   }),
 
-  elementClassNames: computed('config.APP.imgix.classNames', function () {
-    return config.APP.imgix.classNames || 'imgix-image';
+  elementClassNames: computed('this.config.APP.imgix.classNames', function () {
+    return this.config.APP.imgix.classNames || 'imgix-image';
   }),
 
   _handleImageLoad(event) {
