@@ -23,7 +23,7 @@ const attributeMap = {
   src: 'src',
   srcset: 'srcset',
   sizes: 'sizes',
-  ...(get(config, 'APP.imgix.attributeNameMap') || {})
+  ...(get(config, 'APP.imgix.attributeNameMap') || {}),
 };
 
 const buildDebugParams = ({ width, height }) => {
@@ -36,7 +36,7 @@ const buildDebugParams = ({ width, height }) => {
     txtfont: 'Helvetica Neue',
     txtclr: 'ffffff',
     txtpad: 40,
-    txtfit: 'max'
+    txtfit: 'max',
   };
 };
 
@@ -50,7 +50,7 @@ export default Component.extend({
     `src:${attributeMap.src}`,
     `placeholderSrc:${attributeMap.src === 'src' ? '_src' : 'src'}`,
     `srcset:${attributeMap.srcset}`,
-    `sizes:${attributeMap.sizes}`
+    `sizes:${attributeMap.sizes}`,
   ],
 
   path: null, // The path to your image
@@ -98,7 +98,7 @@ export default Component.extend({
     this._super(...args);
   },
 
-  _pathAsUri: computed('path', function() {
+  _pathAsUri: computed('path', function () {
     if (!get(this, 'path')) {
       return false;
     }
@@ -106,7 +106,7 @@ export default Component.extend({
     return new URI(get(this, 'path'));
   }),
 
-  _client: computed('disableLibraryParam', function() {
+  _client: computed('disableLibraryParam', function () {
     if (!config || !get(config, 'APP.imgix.source')) {
       throw new EmberError(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
@@ -122,7 +122,7 @@ export default Component.extend({
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
-        : `ember-${constants.APP_VERSION}`
+        : `ember-${constants.APP_VERSION}`,
     });
   }),
 
@@ -134,7 +134,7 @@ export default Component.extend({
     'crop',
     'fit',
     'disableSrcSet',
-    function() {
+    function () {
       // Warnings, checks
       if (!get(this, 'path')) {
         return;
@@ -152,7 +152,7 @@ export default Component.extend({
       const pathAsUri = get(this, '_pathAsUri');
       const disableSrcSet = get(this, 'disableSrcSet');
       const client = get(this, '_client');
-      const buildWithOptions = options =>
+      const buildWithOptions = (options) =>
         client.buildURL(pathAsUri.path(), options);
 
       const isFixedDimensionsMode = widthProp != null || heightProp != null;
@@ -197,7 +197,7 @@ export default Component.extend({
         ...pathAsUri.queryPairs.reduce((memo, param) => {
           memo[param[0]] = param[1];
           return memo;
-        }, {})
+        }, {}),
       };
 
       // Build src from base options
@@ -211,16 +211,15 @@ export default Component.extend({
 
         // w-type srcsets should not be used if one of the dimensions has been fixed as it will have no effect
         if (isFixedDimensionsMode) {
-          const buildWithDpr = dpr =>
+          const buildWithDpr = (dpr) =>
             buildWithOptions({
               ...options,
-              dpr
+              dpr,
             });
           // prettier-ignore
           return `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
         } else {
-          const buildSrcSetPair = targetWidth => {
-
+          const buildSrcSetPair = (targetWidth) => {
             const debugParams = shouldShowDebugParams
               ? buildDebugParams({ width: targetWidth })
               : {};
@@ -228,12 +227,12 @@ export default Component.extend({
             const urlOptions = {
               ...options,
               ...debugParams,
-              w: targetWidth
+              w: targetWidth,
             };
             const url = buildWithOptions(urlOptions);
             return `${url} ${targetWidth}w`;
           };
-          
+
           return targetWidths.map(buildSrcSetPair).join(', ');
         }
       })();
@@ -242,13 +241,13 @@ export default Component.extend({
     }
   ),
 
-  src: computed('_srcAndSrcSet', function() {
+  src: computed('_srcAndSrcSet', function () {
     return get(this, '_srcAndSrcSet.src');
   }),
-  srcset: computed('_srcAndSrcSet', function() {
+  srcset: computed('_srcAndSrcSet', function () {
     return get(this, '_srcAndSrcSet.srcset');
   }),
-  placeholderSrc: computed('placeholderPath', function() {
+  placeholderSrc: computed('placeholderPath', function () {
     if (attributeMap.src === 'src') {
       return null;
     }
@@ -258,12 +257,12 @@ export default Component.extend({
       ...placeholderPathURI.queryPairs.reduce((memo, param) => {
         memo[param[0]] = param[1];
         return memo;
-      }, {})
+      }, {}),
     });
     return placeholderURL;
   }),
 
-  elementClassNames: computed('config.APP.imgix.classNames', function() {
+  elementClassNames: computed('config.APP.imgix.classNames', function () {
     return config.APP.imgix.classNames || 'imgix-image';
   }),
 
@@ -281,7 +280,7 @@ export default Component.extend({
       () => !get(this, 'isDestroyed') && tryInvoke(this, 'onError', [event]),
       500
     );
-  }
+  },
 });
 
 function isDimensionInvalid(widthProp) {
